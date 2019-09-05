@@ -1,0 +1,44 @@
+{
+    "name": "onefasteuro/shopify",
+    "description": "Interaction with the Shopify API",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Oliver Haroun",
+            "email": "onefasteuro@gmail.com",
+            "homepage": "https://driftfreediving.com"
+        }
+    ],
+    "homepage": "https://github.com/onefasteuro/shopify",
+    "keywords": ["Laravel", "Shopify"],
+    "require": {
+        "illuminate/support": "^6.0",
+        "rmccue/requests": "^1.7"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^8.0",
+        "mockery/mockery": "^1.1",
+        "orchestra/testbench": "^4.0",
+        "sempro/phpunit-pretty-print": "^1.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "onefasteuro\\Shopify\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "onefasteuro\\Shopify\\Tests\\": "tests"
+        }
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "onefasteuro\\Shopify\\ShopifyServiceProvider"
+            ],
+            "aliases": {
+                "Shopify": "onefasteuro\\Shopify\\Shopify"
+            }
+        }
+    }
+}
