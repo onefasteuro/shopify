@@ -12,6 +12,7 @@
     "homepage": "https://github.com/onefasteuro/shopify",
     "keywords": ["Laravel", "Shopify"],
     "require": {
+        "ext-json": "*",
         "illuminate/support": "^6.0",
         "rmccue/requests": "^1.7"
     },

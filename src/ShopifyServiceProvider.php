@@ -7,6 +7,7 @@ use Illuminate\Support\ServiceProvider;
 use onefasteuro\Shopify\Commands\SyncShopifyCommand;
 use onefasteuro\Shopify\Commands\SyncWebhooksCommand;
 use onefasteuro\Shopify\Controllers\WebhooksController;
+use onefasteuro\Shopify\Throttles\StorefrontThrottle;
 use onefasteuro\Shopify\Throttles\Throttle;
 
 
@@ -48,6 +49,10 @@ class ShopifyServiceProvider extends ServiceProvider
 	    $this->app->singleton(Throttle::class, function($app){
 		    return new Throttle;
 	    });
+	
+	    $this->app->singleton(StorefrontThrottle::class, function($app){
+		    return new StorefrontThrottle;
+	    });
 
         $this->app->singleton(Shopify::class, function($app){
 
@@ -83,7 +88,7 @@ class ShopifyServiceProvider extends ServiceProvider
 
             $client = new \Requests_Session($url, $headers);
 
-            return new Storefront($client);
+            return new Storefront($client, $app[StorefrontThrottle::class]);
         });
 
 

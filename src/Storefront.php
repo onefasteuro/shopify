@@ -4,12 +4,16 @@ namespace onefasteuro\Shopify;
 
 
 
+use onefasteuro\Shopify\Throttles\StorefrontThrottle;
+
 class Storefront implements GraphQLContract
 {
 	protected $client;
+	protected $throttle;
 
-	public function __construct(\Requests_Session $client)
+	public function __construct(\Requests_Session $client, StorefrontThrottle $t)
 	{
+		$this->throttle = $t;
 	    $this->client = $client;
 	}
 
@@ -21,7 +25,6 @@ class Storefront implements GraphQLContract
 	
 	public function query($gql, $variables = [])
 	{
-        $retry = true;
 
         if(count($variables) > 0) {
             $send = ["query" => $gql, "variables" => $variables];
@@ -31,37 +34,21 @@ class Storefront implements GraphQLContract
         }
 
         $send = json_encode($send);
+		
+		$output = null;
+		$throttled = true;
 
         do {
-            try {
-                $response = $this->client->post('', [], $send);
-                $retry = false;
-            }
-            catch(\Requests_Exception $e) {
-                \Log::error($e->getMessage());
-                if($e->getType() == 'curlerror') {
-                    $retry = true;
-                }
-            }
-        }
-        while ($retry === true);
-
-        $output = json_decode($response->body, true);
-
-
-
-        $output = static::checkOutput($output);
-		
-		return static::checkOutput($output);
-	}
 	
-	public static function checkOutput($data)
-	{
-		if(array_key_exists('errors', $data)) {
+	        $response = $this->client->post('', [], $send);
+	        $output = json_decode($response->body, true);
+	        $throttled = $this->getThrottle()->assertThrottle($output);
+	
+	        $this->getThrottle()->mightThrottle();
+        }
+        while ($throttled === true);
 		
-		}
-		
-		return $data;
+		return $output;
 	}
 
 }

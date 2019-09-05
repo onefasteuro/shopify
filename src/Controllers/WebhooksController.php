@@ -4,6 +4,8 @@ namespace onefasteuro\Shopify\Controllers;
 
 use Illuminate\Http\Request;
 
+use onefasteuro\Shopify\Jobs\Webhooks\SaveProduct as SaveProductWebhooks;
+
 class WebhooksController extends BaseController
 {
 
@@ -36,6 +38,11 @@ class WebhooksController extends BaseController
 	public function productWasCreated(Request $request)
 	{
 		$id = $request->get('id');
+		
+		$data = $request->getContent();
+		$data = json_decode($data, true);
+		
+		dispatch(new SaveProductWebhooks($data));
 		
 		return response()->json([], 200);
 	}

@@ -8,6 +8,17 @@ use onefasteuro\Shopify\Fragments\ProductFragment;
 class ProductQuery extends BaseQuery
 {
 
+	public static function storefrontFindByHandle()
+	{
+		$call = 'query($n: String!) {
+	    productByHandle(handle: $n) {
+			...productFragment
+	    }
+} ' . ProductFragment::storefrontFragment();
+		return $call;
+	}
+	
+	
     public static function storefrontQuery() {
         $call = 'query($l: Int, $n: String) {
 	    products(first: $l, after: $n) {

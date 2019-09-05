@@ -50,8 +50,6 @@ class SyncShopifyCommand extends Command
 
         $this->shopify = $shopify;
         $this->storefront = $storefront;
-        
-        dd(1);
     }
 
 
